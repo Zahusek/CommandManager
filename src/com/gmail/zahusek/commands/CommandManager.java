@@ -149,8 +149,6 @@ public class CommandManager extends BukkitCommand {
 
 				Cmd cmd = method.getAnnotation(Cmd.class);
 
-				
-
 				if (!cmd.name().equalsIgnoreCase(this.getName()))
 					continue;
                                 if (!commandsender.hasPermission(cmd.permission())) {
