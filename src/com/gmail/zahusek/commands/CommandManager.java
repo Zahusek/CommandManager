@@ -24,7 +24,7 @@ import com.google.common.collect.Maps;
 public class CommandManager extends BukkitCommand {
 
 	private final String unknown = ChatColor.translateAlternateColorCodes('&',
-			"&cno support an argument !");
+			"&cNo support for that argument!");
 
 	private static final Map<CommandListener, List<Method>> COMMANDS = Maps
 			.newHashMap();
