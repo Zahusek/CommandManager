@@ -155,10 +155,9 @@ public class CommandManager extends BukkitCommand {
 				if (!cmd.name().equalsIgnoreCase(this.getName()))
 					continue;
                                 if (!commandsender.hasPermission(cmd.permission())) {
-					commandsender.sendMessage(ChatColor
-							.translateAlternateColorCodes('&',
-									cmd.permissionMessage()));
+					commandsender.sendMessage(ChatColor.translateAlternateColorCodes('&', cmd.permissionMessage()));
 					return true;
+                                }
   
 				try {	method.invoke(listener.getKey(), commandsender, args);
 					return true;
