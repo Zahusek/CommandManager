@@ -149,18 +149,18 @@ public class CommandManager extends BukkitCommand {
 
 				Cmd cmd = method.getAnnotation(Cmd.class);
 
-				if (!commandsender.hasPermission(cmd.permission())) {
-					commandsender.sendMessage(ChatColor
-							.translateAlternateColorCodes('&',
-									cmd.permissionMessage()));
-					return true;
+				
 				}
 
 				if (!cmd.name().equalsIgnoreCase(this.getName()))
 					continue;
-
-				try {
-					method.invoke(listener.getKey(), commandsender, args);
+                                if (!commandsender.hasPermission(cmd.permission())) {
+					commandsender.sendMessage(ChatColor
+							.translateAlternateColorCodes('&',
+									cmd.permissionMessage()));
+					return true;
+  
+				try {	method.invoke(listener.getKey(), commandsender, args);
 					return true;
 				} catch (IllegalAccessException | IllegalArgumentException
 						| InvocationTargetException e) {
