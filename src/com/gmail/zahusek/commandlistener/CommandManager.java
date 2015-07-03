@@ -12,21 +12,20 @@ import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.defaults.VanillaCommand;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.ChatColor;
 
 import com.gmail.zahusek.commandlistener.CmdHandler;
 import com.gmail.zahusek.commandlistener.CommandListener;
 import com.gmail.zahusek.commandlistener.SubHandler;
-import com.gmail.zahusek.utils.Util;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
-public class CommandManager extends VanillaCommand implements Util {
+public class CommandManager extends VanillaCommand {
 
-	protected CommandManager(String name) {
-		super(name);
-	}
-
-	private final String unknown = PREFIX + "&cno support an argument !";
+	protected CommandManager(String name) { super(name); }
+	
+	private final String unknown = ChatColor.translateAlternateColorCodes('&',
+			"&cno support an argument !");
 	private static final Map<CommandListener, List<Method>> COMMANDS = Maps
 			.newHashMap();
 	private static final Map<CommandListener, List<Method>> SUBCOMMANDS = Maps
@@ -46,7 +45,8 @@ public class CommandManager extends VanillaCommand implements Util {
 				continue;
 
 			Class<?>[] value = method.getParameterTypes();
-			if (value.length != 2 || !CommandSender.class.equals(value[0])
+			if (value.length != 2
+					|| !CommandSender.class.equals(value[0])
 					|| !String[].class.equals(value[1]))
 				continue;
 
@@ -100,13 +100,12 @@ public class CommandManager extends VanillaCommand implements Util {
 	public boolean execute(CommandSender commandsender, String label,
 			String[] args) {
 		if (args.length > 0) {
-			for (Entry<CommandListener, List<Method>> listeners : SUBCOMMANDS
-					.entrySet()) {
+			for (Entry<CommandListener, List<Method>> listeners : SUBCOMMANDS.entrySet()) {
 				for (Method methods : listeners.getValue()) {
-
+					
 					CommandListener key = listeners.getKey();
 					Method value = methods;
-
+					
 					SubHandler cmd = value.getAnnotation(SubHandler.class);
 					if (!cmd.parent().equalsIgnoreCase(this.getName()))
 						continue;
@@ -114,8 +113,7 @@ public class CommandManager extends VanillaCommand implements Util {
 					List<String> cargs = Lists.newArrayList(args);
 					List<String> sargs = Lists.newArrayList(cmd.args());
 
-					for (int i = 0; i < cargs.size()
-							&& cargs.size() <= sargs.size(); i++)
+					for (int i = 0; i < cargs.size() && cargs.size() <= sargs.size(); i++)
 						if (sargs.get(i).trim().equals(""))
 							cargs.set(i, "");
 
@@ -123,13 +121,15 @@ public class CommandManager extends VanillaCommand implements Util {
 							&& cargs.containsAll(sargs)) {
 
 						if (!commandsender.hasPermission(cmd.permission())) {
-							commandsender
-									.sendMessage($(cmd.permissionMessage()));
+							commandsender.sendMessage(ChatColor
+									.translateAlternateColorCodes('&',
+											cmd.permissionMessage()));
 							return true;
 						}
 
 						try {
-							value.invoke(key, commandsender, args);
+							value.invoke(key, commandsender,
+									args);
 							return true;
 						} catch (IllegalAccessException
 								| IllegalArgumentException
@@ -142,10 +142,9 @@ public class CommandManager extends VanillaCommand implements Util {
 			commandsender.sendMessage(unknown);
 			return true;
 		}
-		for (Entry<CommandListener, List<Method>> listeners : COMMANDS
-				.entrySet()) {
+		for (Entry<CommandListener, List<Method>> listeners : COMMANDS.entrySet()) {
 			for (Method methods : listeners.getValue()) {
-
+				
 				CommandListener key = listeners.getKey();
 				Method value = methods;
 
@@ -155,7 +154,7 @@ public class CommandManager extends VanillaCommand implements Util {
 					continue;
 
 				if (!commandsender.hasPermission(cmd.permission())) {
-					commandsender.sendMessage($(cmd.permissionMessage()));
+					commandsender.sendMessage(ChatColor.translateAlternateColorCodes('&', cmd.permissionMessage()));
 					return true;
 				}
 				try {
