@@ -76,8 +76,17 @@ public class CommandManager extends VanillaCommand {
 
 		if (!mcmd.isEmpty())
 			COMMANDS.put(handler, mcmd);
-		if (!msub.isEmpty())
+		if (!msub.isEmpty()){
+			Collections.sort(msub, new Comparator<Method>() {
+				@Override
+				public int compare(Method o1, Method o2) {
+					SubHandler s1 = o1.getAnnotation(SubHandler.class);
+					SubHandler s2 = o2.getAnnotation(SubHandler.class);
+					return s2.args().length - s1.args().length;
+				}
+			});
 			SUBCOMMANDS.put(handler, msub);
+		}
 	}
 
 	private static CommandMap getCommandMap() {
